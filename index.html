@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Life Dashboard</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+
+    <!-- ===== MODAL: Custom Name (shown on first visit) ===== -->
+    <div id="name-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-box">
+        <h2 id="modal-title"><i class="fa-solid fa-user-circle"></i> Halo, siapa namamu?</h2>
+        <p class="modal-sub">Nama kamu akan ditampilkan di greeting.</p>
+        <input
+          type="text"
+          id="name-input"
+          placeholder="Masukkan namamu..."
+          maxlength="40"
+          autocomplete="off"
+        />
+        <button class="btn btn-primary btn-full" id="save-name">
+          Simpan &amp; Mulai
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== TOP BAR ===== -->
+    <div class="top-bar">
+      <span class="app-brand"><i class="fa-solid fa-gauge-high"></i> Life Dashboard</span>
+      <div class="top-bar-actions">
+        <!-- Change name -->
+        <button class="icon-btn" id="change-name-btn" title="Ganti nama">
+          <i class="fa-solid fa-user-pen"></i>
+        </button>
+        <!-- Light / Dark toggle -->
+        <button class="icon-btn" id="theme-toggle" title="Ganti tema" aria-label="Toggle dark/light mode">
+          <i class="fa-solid fa-moon" id="theme-icon"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== HEADER: Greeting & Clock ===== -->
+    <header class="greeting-section">
+      <div class="greeting-inner">
+        <p id="clock" class="clock">00:00:00</p>
+        <h1 id="greeting" class="greeting-text">Selamat Datang!</h1>
+        <p id="date-display" class="date-display"></p>
+      </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="dashboard-grid">
+
+      <!-- ── Focus Timer ── -->
+      <section class="card timer-card" id="focus-timer">
+        <h2 class="card-title"><i class="fa-solid fa-clock"></i> Focus Timer</h2>
+
+        <div class="timer-display-wrap">
+          <svg class="timer-ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="ring-bg" cx="60" cy="60" r="52" />
+            <circle class="ring-progress" id="ring-progress" cx="60" cy="60" r="52" />
+          </svg>
+          <span class="timer-display" id="timer-display">25:00</span>
+        </div>
+
+        <div class="timer-mode-tabs">
+          <button class="mode-btn active" data-minutes="25">Pomodoro</button>
+          <button class="mode-btn" data-minutes="5">Short Break</button>
+          <button class="mode-btn" data-minutes="15">Long Break</button>
+          <button class="mode-btn mode-custom" data-minutes="custom">Custom</button>
+        </div>
+
+        <!-- Custom duration (hidden by default) -->
+        <div class="custom-duration" id="custom-duration" hidden>
+          <label for="custom-minutes">Durasi (menit):</label>
+          <input type="number" id="custom-minutes" min="1" max="120" value="25" />
+          <button class="btn btn-secondary btn-sm" id="set-custom">Set</button>
+        </div>
+
+        <div class="timer-controls">
+          <button class="btn btn-primary" id="start-timer">
+            <i class="fa-solid fa-play"></i> Mulai
+          </button>
+          <button class="btn btn-secondary" id="pause-timer">
+            <i class="fa-solid fa-pause"></i> Jeda
+          </button>
+          <button class="btn btn-outline" id="reset-timer">
+            <i class="fa-solid fa-rotate-left"></i> Reset
+          </button>
+        </div>
+        <p class="session-count">Sesi selesai: <span id="session-count">0</span></p>
+      </section>
+
+      <!-- ── To-Do List ── -->
+      <section class="card todo-card" id="todo-section">
+        <div class="card-title-row">
+          <h2 class="card-title"><i class="fa-solid fa-list-check"></i> To-Do List</h2>
+          <div class="sort-group">
+            <label for="sort-select" class="sr-only">Urutkan</label>
+            <select id="sort-select" class="sort-select" title="Urutkan tugas">
+              <option value="newest">Terbaru</option>
+              <option value="oldest">Terlama</option>
+              <option value="az">A → Z</option>
+              <option value="za">Z → A</option>
+              <option value="active">Aktif dulu</option>
+              <option value="done">Selesai dulu</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="todo-input-group">
+          <input
+            type="text"
+            id="todo-input"
+            placeholder="Tambah tugas baru..."
+            maxlength="100"
+            autocomplete="off"
+          />
+          <button class="btn btn-primary" id="add-todo" aria-label="Tambah tugas">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+
+        <div class="todo-filter">
+          <button class="filter-btn active" data-filter="all">Semua</button>
+          <button class="filter-btn" data-filter="active">Aktif</button>
+          <button class="filter-btn" data-filter="completed">Selesai</button>
+        </div>
+
+        <ul id="todo-list" class="todo-list" aria-live="polite"></ul>
+
+        <div class="todo-footer">
+          <span id="todo-count">0 tugas tersisa</span>
+          <button class="link-btn" id="clear-completed">Hapus yang selesai</button>
+        </div>
+      </section>
+
+      <!-- ── Quick Links ── -->
+      <section class="card links-card" id="quick-links">
+        <h2 class="card-title"><i class="fa-solid fa-link"></i> Quick Links</h2>
+        <div class="link-input-group">
+          <input type="text" id="link-name" placeholder="Nama" maxlength="30" autocomplete="off" />
+          <input type="url"  id="link-url"  placeholder="https://..." autocomplete="off" />
+          <button class="btn btn-primary" id="add-link">
+            <i class="fa-solid fa-plus"></i> Tambah
+          </button>
+        </div>
+        <div id="links-grid" class="links-grid" aria-live="polite"></div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <p>Life Dashboard &copy; <span id="year"></span></p>
+    </footer>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
